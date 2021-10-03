@@ -1,0 +1,143 @@
+import React , {Component} from 'react';
+class ContactUs extends Component{
+    constructor(){
+        super();
+        this.state ={
+            errorList:{},
+            fieldList:{},
+            responsemsg:""
+        }
+    }
+
+    // only one function to pick value of all fields 
+    pickValue = (obj)=>{
+        let fieldList = this.state.fieldList;
+        fieldList[obj.target.name] = obj.target.value; 
+        // fieldList{"fname":Ramesh, "mobile":8888888, "email":ramesh@gmail.com}
+        this.setState({
+            fieldList
+        })
+    }
+
+    save = () =>{
+        let formStatus=true;
+        let fieldList = this.state.fieldList;
+        let errorList = this.state.errorList;
+        
+        if( ! fieldList["fname"] ){
+            formStatus = false;
+            errorList["nameError"] = "Please Enter Name !";
+        }else{
+            errorList["nameError"] = "";
+        }
+               //mobile validation
+        let mpattern = /^[6-9]\d{9}$/; //starting no 6 to 9 , 10 digit
+
+        if( !mpattern.test( fieldList["mobile"] ) )
+        {
+            formStatus = false;
+            errorList["mobileError"] = "Please Enter Mobile No !";
+        }else{
+            errorList["mobileError"] = "";
+        }
+               //email validation
+               
+       let epattern = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+
+        if( !epattern.test( fieldList["email"] ) )
+        {
+            formStatus = false;
+            errorList["emailError"] = "Please Enter e-Mail !";
+        }else{
+            errorList["emailError"] = "";
+        }
+        //city validation
+        if(!fieldList["city"] ){
+            formStatus = false;
+            errorList["cityError"] = "Please Select Your state !";
+        }
+        else{
+            errorList["cityError"] = "";
+        }
+
+        
+        //message validation
+        if(!fieldList["message"] ){
+            formStatus = false;
+            errorList["messageError"] = "Please Enter Something !";
+        }
+        else{
+            errorList["messageError"] = "";
+        }
+        
+        if(formStatus == true){
+            var msg = "Please wait Processing..";
+        }else{
+            var msg ="Invalid Input"
+        }
+
+        this.setState({
+            errorList,
+            responsemsg:msg
+        })
+    }
+
+    render(){
+        return(
+            <div className="container mt-3">
+                <div className="row">
+                    <div className="col-lg-4 offset-4">
+                        <h2 className="text-center text-primary"> Form Validation </h2>
+                        <em className="text-danger"> * Marked fields are mandatory </em>
+                        <p className="text-primary text-center"> {this.state.responsemsg} </p>
+                        <div className="mb-3">
+                            <label> First Name <em className="text-danger">*</em> </label>
+                            <input type="text" className="form-control" name="fname" onChange={this.pickValue}/>
+                            <small className="text-danger">{this.state.errorList.nameError}</small>
+                        </div>
+                        <div className="mb-3">
+                            <label> Last Name <em className="text-danger">*</em> </label>
+                            <input type="text" className="form-control" name="lname" onChange={this.pickValue}/>
+                            <small className="text-danger">{this.state.errorList.nameError}</small>
+                        </div>
+
+
+                        <div className="mb-3">
+                            <label>  Mobile No <em className="text-danger">*</em> </label>
+                            <input type="text" className="form-control" name="mobile" onChange={this.pickValue}/>
+                            <small className="text-danger">{this.state.errorList.mobileError}</small>
+                        </div>
+                        <div className="mb-3">
+                            <label>  e-Mail id <em className="text-danger">*</em> </label>
+                            <input type="text" className="form-control" name="email" onChange={this.pickValue}/>
+                            <small className="text-danger">{this.state.errorList.emailError}</small>
+                        </div>
+                        <div className="mb-3">
+                            <label> State <em className="text-danger">*</em> </label>
+                            <select className="form-control" name="state" onChange={this.pickValue}>
+                                <option value="">Choose</option>
+                                <option>Karnataka</option>
+                                <option>Maharashtra</option>
+                                <option>Uttar Pradesh</option>
+                                <option>Madhya Pradesh</option>
+                            </select>
+                            <small className="text-danger">{this.state.errorList.cityError}</small>
+                        </div>
+                       
+                        <div className="mb-3">
+                            <label> Address <em className="text-danger">*</em> </label>
+                            <textarea className="form-control" name="address" onChange={this.pickValue}></textarea>
+                            <small className="text-danger">{this.state.errorList.messageError}</small>
+                        </div>
+                        <div className="text-center">
+                            <button className="btn btn-success" onClick={this.save}> Submit </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
+
+export default ContactUs;
